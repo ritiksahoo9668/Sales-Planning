@@ -1,0 +1,82 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Home{% endblock %} · {{ ERP_APP_NAME }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="{% static 'css/erp.css' %}" rel="stylesheet">
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="erp-body">
+    <nav class="navbar navbar-expand-lg navbar-dark erp-navbar">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-semibold" href="{% url 'parties:party_list' %}">
+                <i class="bi bi-building-gear me-2"></i>{{ ERP_APP_NAME }}
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#erpNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="erpNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.app_name == 'parties' %}active{% endif %}"
+                           href="{% url 'parties:party_list' %}">Business Partners</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/" target="_blank">Admin</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/api/v1/" target="_blank">API</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <span class="nav-link"><i class="bi bi-person-circle me-1"></i>{{ user.username }}</span>
+                    </li>
+                    <li class="nav-item d-flex align-items-center">
+                        <form method="post" action="{% url 'accounts:logout' %}" class="erp-logout-form m-0">
+                            {% csrf_token %}
+                            <button type="submit" class="nav-link btn btn-link erp-logout-btn">Logout</button>
+                        </form>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'accounts:login' %}">Login</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container-fluid py-4 px-4">
+        {% if messages %}
+        <div class="row">
+            <div class="col-12">
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        {% block breadcrumb %}{% endblock %}
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="erp-footer text-center py-3 text-muted small">
+        &copy; {% now "Y" %} {{ ERP_APP_NAME }}. All rights reserved.
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'js/formset.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

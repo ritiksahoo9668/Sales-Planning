@@ -1,0 +1,105 @@
+:root {
+    --erp-primary: #1e3a5f;
+    --erp-accent: #2563eb;
+    --erp-bg: #f4f6f9;
+    --erp-border: #e2e8f0;
+}
+
+body.erp-body {
+    background: var(--erp-bg);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.erp-navbar {
+    background: linear-gradient(135deg, var(--erp-primary), #0f2744);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.erp-navbar .nav-link.active {
+    font-weight: 600;
+}
+
+.erp-card {
+    border: 1px solid var(--erp-border);
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px rgba(15, 39, 68, 0.06);
+}
+
+.erp-table thead th {
+    background: #f8fafc;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #64748b;
+    border-bottom-width: 1px;
+}
+
+.erp-tabs .nav-link {
+    color: #475569;
+    font-weight: 500;
+    border: none;
+    border-bottom: 2px solid transparent;
+    border-radius: 0;
+}
+
+.erp-tabs .nav-link.active {
+    color: var(--erp-accent);
+    border-bottom-color: var(--erp-accent);
+    background: transparent;
+}
+
+.erp-breadcrumb {
+    background: transparent;
+    padding: 0;
+}
+
+.erp-role-card {
+    background: #fafbfc;
+    transition: box-shadow 0.2s;
+}
+
+.erp-role-card:hover {
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1);
+}
+
+.erp-footer {
+    margin-top: auto;
+    border-top: 1px solid var(--erp-border);
+    background: #fff;
+}
+
+.erp-logout-form .erp-logout-btn {
+    color: rgba(255, 255, 255, 0.85);
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    line-height: inherit;
+}
+
+.erp-logout-form .erp-logout-btn:hover {
+    color: #fff;
+}
+
+.formset-row.deleted {
+    opacity: 0.45;
+    background: #fef2f2;
+}
+
+main.container-fluid {
+    flex: 1;
+}
+
+.form-control::placeholder,
+.form-select::placeholder {
+    color: #94a3b8;
+    opacity: 1;
+}
+
+@media (max-width: 768px) {
+    .erp-tabs {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+}

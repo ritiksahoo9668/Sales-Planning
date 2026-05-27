@@ -1,0 +1,189 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ role_label }} — {{ party.name }}{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+    <p class="text-muted small mb-1">
+        <a href="{% url 'parties:party_detail' party.pk %}">{{ party.code }} — {{ party.name }}</a>
+    </p>
+    <h1 class="h3 mb-0">Manage {{ role_label }} Details</h1>
+</div>
+
+<form method="post" enctype="multipart/form-data" novalidate>
+    {% csrf_token %}
+
+    <ul class="nav nav-tabs erp-tabs" id="roleTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-commercial" type="button">Commercial</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-statutory" type="button">Statutory</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-bank" type="button">Bank Details</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-contacts" type="button">Contacts</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-documents" type="button">Documents</button>
+        </li>
+        {% if vendor_form %}
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-vendor" type="button">Vendor Profile</button>
+        </li>
+        {% endif %}
+        {% if transporter_form %}
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-transport" type="button">Transport Details</button>
+        </li>
+        {% endif %}
+    </ul>
+
+    <div class="tab-content card erp-card border-top-0 rounded-top-0 p-4">
+        <div class="tab-pane fade show active" id="tab-commercial">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Credit Limit</label>
+                    {{ commercial_form.credit_limit }}
+                    {% for e in commercial_form.credit_limit.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Credit Days</label>
+                    {{ commercial_form.credit_days }}
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="tab-statutory">
+            <div class="row">
+                {% for field in statutory_form %}
+                <div class="col-md-6 mb-3">
+                    <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% for e in field.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="tab-bank">
+            {{ bank_formset.management_form }}
+            <div id="bank-formset" data-prefix="bank">
+                {% for form in bank_formset %}
+                <div class="formset-row border rounded p-3 mb-3 position-relative">
+                    {% if bank_formset.can_delete %}
+                    <div class="form-check position-absolute top-0 end-0 m-2">
+                        {{ form.DELETE }}
+                        <label class="form-check-label text-danger small">Remove</label>
+                    </div>
+                    {% endif %}
+                    {{ form.id }}
+                    <div class="row">
+                        {% for field in form.visible_fields %}
+                        {% if field.name != 'DELETE' %}
+                        <div class="col-md-4 mb-2">
+                            <label class="form-label small">{{ field.label }}</label>
+                            {{ field }}
+                            {% for e in field.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <button type="button" class="btn btn-outline-secondary btn-sm add-formset-row" data-target="#bank-formset" data-prefix="bank">
+                <i class="bi bi-plus"></i> Add Bank Account
+            </button>
+        </div>
+
+        <div class="tab-pane fade" id="tab-contacts">
+            {{ contact_formset.management_form }}
+            <div id="contact-formset" data-prefix="contact">
+                {% for form in contact_formset %}
+                <div class="formset-row border rounded p-3 mb-3">
+                    {% if contact_formset.can_delete %}
+                    <div class="form-check text-end mb-2">
+                        {{ form.DELETE }} <label class="form-check-label text-danger small">Remove</label>
+                    </div>
+                    {% endif %}
+                    {{ form.id }}
+                    <div class="row">
+                        {% for field in form.visible_fields %}
+                        {% if field.name != 'DELETE' %}
+                        <div class="col-md-3 mb-2">
+                            <label class="form-label small">{{ field.label }}</label>
+                            {{ field }}
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <button type="button" class="btn btn-outline-secondary btn-sm add-formset-row" data-target="#contact-formset" data-prefix="contact">
+                <i class="bi bi-plus"></i> Add Contact
+            </button>
+        </div>
+
+        <div class="tab-pane fade" id="tab-documents">
+            {{ document_formset.management_form }}
+            <div id="document-formset" data-prefix="document">
+                {% for form in document_formset %}
+                <div class="formset-row border rounded p-3 mb-3">
+                    {% if document_formset.can_delete %}
+                    <div class="form-check text-end mb-2">
+                        {{ form.DELETE }} <label class="form-check-label text-danger small">Remove</label>
+                    </div>
+                    {% endif %}
+                    {{ form.id }}
+                    <div class="row">
+                        {% for field in form.visible_fields %}
+                        {% if field.name != 'DELETE' %}
+                        <div class="col-md-4 mb-2">
+                            <label class="form-label small">{{ field.label }}</label>
+                            {{ field }}
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <button type="button" class="btn btn-outline-secondary btn-sm add-formset-row" data-target="#document-formset" data-prefix="document">
+                <i class="bi bi-plus"></i> Add Document
+            </button>
+        </div>
+
+        {% if vendor_form %}
+        <div class="tab-pane fade" id="tab-vendor">
+            {% include 'partials/vendor_profile_fields.html' %}
+        </div>
+        {% endif %}
+
+        {% if transporter_form %}
+        <div class="tab-pane fade" id="tab-transport">
+            {% include 'partials/transporter_profile_fields.html' %}
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="mt-4 d-flex gap-2">
+        <button type="submit" class="btn btn-primary btn-lg">Save All Details</button>
+        <a href="{% url 'parties:party_detail' party.pk %}" class="btn btn-outline-secondary btn-lg">Back</a>
+    </div>
+</form>
+{% endblock %}
+
+{% block extra_js %}
+{% if vendor_form %}<script src="{% static 'js/vendor_form.js' %}"></script>{% endif %}
+<script>
+document.querySelectorAll('input:not([type=checkbox]):not([type=radio]):not([type=file]), select, textarea').forEach(el => {
+    if (!el.classList.contains('form-control') && !el.classList.contains('form-select')) el.classList.add('form-control');
+});
+document.querySelectorAll('select').forEach(el => el.classList.replace('form-control', 'form-select'));
+</script>
+{% endblock %}

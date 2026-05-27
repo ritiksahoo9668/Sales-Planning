@@ -1,0 +1,89 @@
+{% if is_filtered %}
+<p class="small text-muted mb-3" id="party-filter-status">
+    Showing <strong>{{ filtered_count }}</strong> partner{{ filtered_count|pluralize }}
+    {% if role_filter %} with role <strong>{{ role_filter_label }}</strong>{% endif %}
+    {% if status_filter %} — status <strong>{{ status_filter_label }}</strong>{% endif %}
+    {% if search_query %} matching <strong>{{ search_query }}</strong>{% endif %}
+</p>
+{% else %}
+<p class="small text-muted mb-0 d-none" id="party-filter-status" aria-hidden="true"></p>
+{% endif %}
+
+<div class="card erp-card">
+    <div class="table-responsive">
+        <table class="table table-hover erp-table mb-0">
+            <thead>
+                <tr>
+                    <th>Code</th>
+                    <th>Name</th>
+                    <th>Mobile</th>
+                    <th>Location</th>
+                    <th>Roles</th>
+                    <th>Status</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for party in parties %}
+                <tr>
+                    <td><span class="fw-semibold">{{ party.code }}</span></td>
+                    <td>{{ party.name }}</td>
+                    <td>{{ party.mobile_no|default:party.phone|default:"—" }}</td>
+                    <td>{{ party.location|default:"—" }}</td>
+                    <td>
+                        {% if role_filter %}
+                            {% for role in party.roles.all %}
+                                {% if role.role == role_filter %}
+                                <span class="badge bg-primary-subtle text-primary-emphasis">{{ role.get_role_display }}</span>
+                                {% endif %}
+                            {% empty %}
+                            <span class="text-muted">—</span>
+                            {% endfor %}
+                        {% else %}
+                            {% for role in party.roles.all %}
+                            <span class="badge bg-secondary-subtle text-secondary-emphasis me-1">{{ role.get_role_display }}</span>
+                            {% empty %}
+                            <span class="text-muted">—</span>
+                            {% endfor %}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if party.is_active %}
+                        <span class="badge bg-success-subtle text-success">Active</span>
+                        {% else %}
+                        <span class="badge bg-danger-subtle text-danger">Inactive</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-end">
+                        <div class="btn-group btn-group-sm" role="group" aria-label="Actions for {{ party.name }}">
+                            <a href="{% url 'parties:party_detail' party.pk %}"
+                               class="btn btn-outline-secondary"
+                               title="View"
+                               aria-label="View {{ party.name }}">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                            <a href="{% url 'parties:party_edit' party.pk %}"
+                               class="btn btn-outline-primary"
+                               title="Edit"
+                               aria-label="Edit {{ party.name }}">
+                                <i class="bi bi-pencil-square"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center text-muted py-5">
+                        {% if is_filtered %}
+                        No business partners match the current filters.
+                        {% else %}
+                        No business partners found.
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% include 'partials/pagination.html' %}
+</div>

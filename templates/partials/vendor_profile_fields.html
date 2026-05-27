@@ -1,0 +1,139 @@
+<div class="vendor-profile-form"
+     data-url-type="{% url 'masters:vendor_type_create' %}"
+     data-url-category="{% url 'masters:vendor_category_create' %}"
+     data-url-subcategory="{% url 'masters:vendor_sub_category_create' %}"
+     data-url-type-delete="{% url 'masters:vendor_type_delete' %}"
+     data-url-category-delete="{% url 'masters:vendor_category_delete' %}"
+     data-url-subcategory-delete="{% url 'masters:vendor_sub_category_delete' %}"
+     data-is-superadmin="{% if request.user.is_superuser %}1{% else %}0{% endif %}">
+
+    <h6 class="text-uppercase text-muted small mb-3">Company Details</h6>
+    <div class="row">
+        <div class="col-md-12 mb-3">
+            <label class="form-label" for="{{ vendor_form.company_name.id_for_label }}">{{ vendor_form.company_name.label }} *</label>
+            {{ vendor_form.company_name }}
+            {% for e in vendor_form.company_name.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+        </div>
+        <div class="col-md-6 mb-3">
+            <label class="form-label" for="{{ vendor_form.gst_no.id_for_label }}">{{ vendor_form.gst_no.label }}</label>
+            {{ vendor_form.gst_no }}
+            {% for e in vendor_form.gst_no.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+        </div>
+        <div class="col-md-6 mb-3">
+            <label class="form-label" for="{{ vendor_form.dispatch_location.id_for_label }}">{{ vendor_form.dispatch_location.label }}</label>
+            {{ vendor_form.dispatch_location }}
+            {% for e in vendor_form.dispatch_location.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+        </div>
+    </div>
+
+    <hr class="my-4">
+    <h6 class="text-uppercase text-muted small mb-3">Vendor Classification</h6>
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            <label class="form-label" for="{{ vendor_form.vendor_type.id_for_label }}">{{ vendor_form.vendor_type.label }}</label>
+            <div class="input-group input-group-sm">
+                {{ vendor_form.vendor_type }}
+                {% if request.user.is_superuser %}
+                <button type="button" class="btn btn-outline-primary vendor-master-toggle" data-target="#add-vendor-type" title="Add vendor type">+</button>
+                <button type="button" class="btn btn-outline-danger vendor-master-delete" data-master="type" title="Delete selected vendor type">-</button>
+                {% endif %}
+            </div>
+            {% if request.user.is_superuser %}
+            <div class="collapse mt-2" id="add-vendor-type">
+                <div class="input-group input-group-sm">
+                    <input type="text" class="form-control vendor-master-name" placeholder="New vendor type" maxlength="100" autocomplete="off">
+                    <button type="button" class="btn btn-primary vendor-master-save" data-master="type">Save</button>
+                    <button type="button" class="btn btn-outline-secondary vendor-master-cancel" data-target="#add-vendor-type">Cancel</button>
+                </div>
+                <div class="text-danger small d-none vendor-master-error"></div>
+            </div>
+            {% endif %}
+            {% for e in vendor_form.vendor_type.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+        </div>
+        <div class="col-md-4 mb-3">
+            <label class="form-label" for="{{ vendor_form.vendor_category.id_for_label }}">{{ vendor_form.vendor_category.label }}</label>
+            <div class="input-group input-group-sm">
+                {{ vendor_form.vendor_category }}
+                {% if request.user.is_superuser %}
+                <button type="button" class="btn btn-outline-primary vendor-master-toggle" data-target="#add-vendor-category" title="Add category">+</button>
+                <button type="button" class="btn btn-outline-danger vendor-master-delete" data-master="category" title="Delete selected category">-</button>
+                {% endif %}
+            </div>
+            {% if request.user.is_superuser %}
+            <div class="collapse mt-2" id="add-vendor-category">
+                <div class="input-group input-group-sm">
+                    <input type="text" class="form-control vendor-master-name" placeholder="New category" maxlength="100" autocomplete="off">
+                    <button type="button" class="btn btn-primary vendor-master-save" data-master="category">Save</button>
+                    <button type="button" class="btn btn-outline-secondary vendor-master-cancel" data-target="#add-vendor-category">Cancel</button>
+                </div>
+                <div class="text-danger small d-none vendor-master-error"></div>
+            </div>
+            {% endif %}
+            {% for e in vendor_form.vendor_category.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+        </div>
+        <div class="col-md-4 mb-3">
+            <label class="form-label" for="{{ vendor_form.vendor_sub_category.id_for_label }}">{{ vendor_form.vendor_sub_category.label }}</label>
+            <div class="input-group input-group-sm">
+                {{ vendor_form.vendor_sub_category }}
+                {% if request.user.is_superuser %}
+                <button type="button" class="btn btn-outline-primary vendor-master-toggle" data-target="#add-vendor-subcategory" title="Add sub category">+</button>
+                <button type="button" class="btn btn-outline-danger vendor-master-delete" data-master="subcategory" title="Delete selected sub category">-</button>
+                {% endif %}
+            </div>
+            {% if request.user.is_superuser %}
+            <div class="collapse mt-2" id="add-vendor-subcategory">
+                <div class="input-group input-group-sm">
+                    <input type="text" class="form-control vendor-master-name" placeholder="New sub category" maxlength="100" autocomplete="off">
+                    <button type="button" class="btn btn-primary vendor-master-save" data-master="subcategory">Save</button>
+                    <button type="button" class="btn btn-outline-secondary vendor-master-cancel" data-target="#add-vendor-subcategory">Cancel</button>
+                </div>
+                <div class="text-danger small d-none vendor-master-error"></div>
+            </div>
+            {% endif %}
+            {% for e in vendor_form.vendor_sub_category.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+        </div>
+    </div>
+
+    <hr class="my-4">
+    <h6 class="text-uppercase text-muted small mb-3">Office Status</h6>
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            <label class="form-label" for="{{ vendor_form.office_status.id_for_label }}">{{ vendor_form.office_status.label }}</label>
+            {{ vendor_form.office_status }}
+            {% for e in vendor_form.office_status.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+        </div>
+    </div>
+</div>
+
+{{ vendor_subcategories|json_script:"vendor-subcategories-data" }}
+
+<div class="modal fade" id="vendorConfirmModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirm Action</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="vendorConfirmModalBody"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="vendorConfirmModalOk">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="vendorMessageModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Message</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="vendorMessageModalBody"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>

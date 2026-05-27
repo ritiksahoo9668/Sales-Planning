@@ -1,0 +1,58 @@
+{% if page_obj and page_obj.paginator.count > 0 %}
+{% url 'parties:party_list' as party_list_url %}
+<div class="card-footer d-flex flex-wrap justify-content-between align-items-center gap-2 py-3">
+    <span class="small text-muted">
+        Showing <strong>{{ page_obj.start_index }}–{{ page_obj.end_index }}</strong>
+        of <strong>{{ page_obj.paginator.count }}</strong>
+    </span>
+    {% if is_paginated %}
+    <nav aria-label="Pagination">
+        <ul class="pagination pagination-sm mb-0">
+            <li class="page-item {% if not page_obj.has_previous %}disabled{% endif %}">
+                {% if page_obj.has_previous %}
+                <a class="page-link" href="{{ party_list_url }}?{% if query_string %}{{ query_string }}&{% endif %}page=1" aria-label="First page">&laquo;</a>
+                {% else %}
+                <span class="page-link">&laquo;</span>
+                {% endif %}
+            </li>
+            <li class="page-item {% if not page_obj.has_previous %}disabled{% endif %}">
+                {% if page_obj.has_previous %}
+                <a class="page-link" href="{{ party_list_url }}?{% if query_string %}{{ query_string }}&{% endif %}page={{ page_obj.previous_page_number }}" aria-label="Previous page">Prev</a>
+                {% else %}
+                <span class="page-link">Prev</span>
+                {% endif %}
+            </li>
+            {% for num in page_range %}
+                {% if num == page_obj.paginator.ELLIPSIS %}
+                <li class="page-item disabled"><span class="page-link">&hellip;</span></li>
+                {% elif num == page_obj.number %}
+                <li class="page-item active" aria-current="page">
+                    <span class="page-link">{{ num }}</span>
+                </li>
+                {% else %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ party_list_url }}?{% if query_string %}{{ query_string }}&{% endif %}page={{ num }}">{{ num }}</a>
+                </li>
+                {% endif %}
+            {% endfor %}
+            <li class="page-item {% if not page_obj.has_next %}disabled{% endif %}">
+                {% if page_obj.has_next %}
+                <a class="page-link" href="{{ party_list_url }}?{% if query_string %}{{ query_string }}&{% endif %}page={{ page_obj.next_page_number }}" aria-label="Next page">Next</a>
+                {% else %}
+                <span class="page-link">Next</span>
+                {% endif %}
+            </li>
+            <li class="page-item {% if not page_obj.has_next %}disabled{% endif %}">
+                {% if page_obj.has_next %}
+                <a class="page-link" href="{{ party_list_url }}?{% if query_string %}{{ query_string }}&{% endif %}page={{ page_obj.paginator.num_pages }}" aria-label="Last page">&raquo;</a>
+                {% else %}
+                <span class="page-link">&raquo;</span>
+                {% endif %}
+            </li>
+        </ul>
+    </nav>
+    {% else %}
+    <span class="small text-muted">Page 1 of 1</span>
+    {% endif %}
+</div>
+{% endif %}

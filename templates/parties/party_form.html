@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if object %}Edit{% else %}Create{% endif %} Partner{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-xl-8">
+        <div class="card erp-card">
+            <div class="card-header bg-white">
+                <h1 class="h4 mb-0">{% if object %}Edit Business Partner{% else %}New Business Partner{% endif %}</h1>
+            </div>
+            <div class="card-body">
+                <form method="post" action="{% if object %}{% url 'parties:party_edit' object.pk %}{% else %}{% url 'parties:party_create' %}{% endif %}">
+                    {% csrf_token %}
+
+                    {% if form.errors %}
+                    <div class="alert alert-danger">
+                        <strong>Please fix these errors:</strong>
+                        <ul class="mb-0 mt-2">
+                            {% for field in form %}
+                                {% for error in field.errors %}
+                                <li><strong>{{ field.label }}:</strong> {{ error }}</li>
+                                {% endfor %}
+                            {% endfor %}
+                            {% for error in form.non_field_errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endif %}
+
+                    <h6 class="text-uppercase text-muted small mb-3">Basic Information</h6>
+                    <div class="row">
+                        {% if object %}
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Party Code</label>
+                            <input type="text" class="form-control" value="{{ object.code }}" readonly disabled>
+                        </div>
+                        {% endif %}
+                        <div class="col-md-{% if object %}8{% else %}12{% endif %} mb-3">
+                            <label class="form-label" for="{{ form.name.id_for_label }}">Name *</label>
+                            {{ form.name }}
+                            {% for e in form.name.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label" for="{{ form.email.id_for_label }}">Email</label>
+                            {{ form.email }}
+                            {% for e in form.email.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label" for="{{ form.mobile_no.id_for_label }}">{{ form.mobile_no.label }}</label>
+                            {{ form.mobile_no }}
+                            {% if form.mobile_no.help_text %}<div class="form-text">{{ form.mobile_no.help_text }}</div>{% endif %}
+                            {% for e in form.mobile_no.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="{{ form.address.id_for_label }}">Address</label>
+                        {{ form.address }}
+                    </div>
+                    <div class="row">
+                        <div class="col-md-8 mb-3">
+                            <label class="form-label" for="{{ form.location.id_for_label }}">Location</label>
+                            {{ form.location }}
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="form-check mt-md-4">
+                                {{ form.is_active }}
+                                <label class="form-check-label" for="{{ form.is_active.id_for_label }}">{{ form.is_active.label }}</label>
+                            </div>
+                            {% if form.is_active.help_text %}
+                            <div class="form-text">{{ form.is_active.help_text }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <hr class="my-4">
+                    <h6 class="text-uppercase text-muted small mb-3">Party Roles</h6>
+                    <p class="text-muted small">Select all roles applicable to this business partner.</p>
+                    <div class="row">
+                        {% for checkbox in form.roles %}
+                        <div class="col-md-4 mb-2">
+                            <div class="form-check">
+                                {{ checkbox.tag }}
+                                <label class="form-check-label" for="{{ checkbox.id_for_label }}">{{ checkbox.choice_label }}</label>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="d-flex gap-2 mt-4">
+                        <button type="submit" class="btn btn-primary">Save Partner</button>
+                        <a href="{% if object %}{% url 'parties:party_detail' object.pk %}{% else %}{% url 'parties:party_list' %}{% endif %}" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.querySelectorAll('input:not([type=checkbox]):not([type=radio]), select, textarea').forEach(el => {
+    if (!el.classList.contains('form-control') && !el.classList.contains('form-select')) {
+        el.classList.add('form-control');
+    }
+});
+document.querySelectorAll('select').forEach(el => el.classList.replace('form-control', 'form-select'));
+</script>
+{% endblock %}
