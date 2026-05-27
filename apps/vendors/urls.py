@@ -2,7 +2,7 @@ from django.urls import path
 
 from apps.parties.views import PartyRoleManageView
 
-app_name = 'vendors'
+app_name = 'vendors';
 
 urlpatterns = [
     path(
